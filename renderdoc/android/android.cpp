@@ -1412,8 +1412,11 @@ ExecuteResult AndroidRemoteServer::ExecuteAndInject(const rdcstr &packageAndActi
       Android::adbExecCommand(m_deviceID, "shell settings put global gpu_debug_app " + packageName);
       Android::adbExecCommand(m_deviceID,
                               "shell settings put global gpu_debug_layer_app " + layerPackage);
+      #if defined(RENDERDOC_SUPPORT_LETSGO)
+      #else
       Android::adbExecCommand(
           m_deviceID, "shell settings put global gpu_debug_layers " RENDERDOC_VULKAN_LAYER_NAME);
+      #endif
       Android::adbExecCommand(
           m_deviceID, "shell settings put global gpu_debug_layers_gles " RENDERDOC_ANDROID_LIBRARY);
 
@@ -1443,7 +1446,10 @@ ExecuteResult AndroidRemoteServer::ExecuteAndInject(const rdcstr &packageAndActi
       if(!checkString.contains("enable_gpu_debug_layers=1") ||
          !checkString.contains("gpu_debug_app=" + packageName) ||
          !checkString.contains("gpu_debug_layer_app=" + layerPackage) ||
+         #if defined(RENDERDOC_SUPPORT_LETSGO)
+         #else
          !checkString.contains("gpu_debug_layers=" RENDERDOC_VULKAN_LAYER_NAME) ||
+         #endif
          !checkString.contains("gpu_debug_layers_gles=" RENDERDOC_ANDROID_LIBRARY))
       {
         info =
@@ -1461,6 +1467,8 @@ ExecuteResult AndroidRemoteServer::ExecuteAndInject(const rdcstr &packageAndActi
       }
     }
 
+    #if defined(RENDERDOC_SUPPORT_LETSGO)
+    #else
     if(hookWithJDWP)
     {
       RDCLOG("Using pre-Android 10 Vulkan layering and JDWP injection");
@@ -1469,6 +1477,7 @@ ExecuteResult AndroidRemoteServer::ExecuteAndInject(const rdcstr &packageAndActi
       Android::adbExecCommand(m_deviceID,
                               "shell setprop debug.vulkan.layers " RENDERDOC_VULKAN_LAYER_NAME);
     }
+    #endif
 
     rdcstr folderName = Android::GetFolderName(m_deviceID);
 

@@ -213,6 +213,8 @@ option(ENABLE_ASAN "Enable address sanitizer" OFF)
 option(ENABLE_TSAN "Enable thread sanitizer" OFF)
 option(ENABLE_MSAN "Enable memory sanitizer" OFF)
 
+option(ENABLE_LETSGO "Enable letsgo support" ON)
+
 if(APPLE)
   if (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 12.0)
     message(FATAL_ERROR "Xcode 12.2 or newer is required to build for Apple")
@@ -340,6 +342,10 @@ endif()
 
 if(ENABLE_METAL)
     add_definitions(-DRENDERDOC_SUPPORT_METAL)
+endif()
+
+if(ENABLE_LETSGO)
+    add_definitions(-DRENDERDOC_SUPPORT_LETSGO)
 endif()
 
 string(TOLOWER "${CMAKE_BUILD_TYPE}" cmake_build_type_lower)
