@@ -672,6 +672,9 @@ struct GLDispatchTable
   // QCOM_texture_foveated
   PFNGLTEXTUREFOVEATIONPARAMETERSQCOMPROC glTextureFoveationParametersQCOM;
 
+  // GL_OES_EGL_image_external
+  PFNGLEGLIMAGETARGETTEXTURE2DOESPROC glEGLImageTargetTexture2DOES;
+
   // ARB_parallel_shader_compile
   PFNGLMAXSHADERCOMPILERTHREADSKHRPROC glMaxShaderCompilerThreadsKHR; // aliases glMaxShaderCompilerThreadsARB
 

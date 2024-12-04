@@ -1413,6 +1413,8 @@ ExecuteResult AndroidRemoteServer::ExecuteAndInject(const rdcstr &packageAndActi
       Android::adbExecCommand(m_deviceID,
                               "shell settings put global gpu_debug_layer_app " + layerPackage);
       #if defined(RENDERDOC_SUPPORT_LETSGO)
+      Android::adbExecCommand(
+          m_deviceID, "shell settings delete global gpu_debug_layers");
       #else
       Android::adbExecCommand(
           m_deviceID, "shell settings put global gpu_debug_layers " RENDERDOC_VULKAN_LAYER_NAME);

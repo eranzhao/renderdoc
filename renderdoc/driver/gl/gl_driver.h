@@ -2017,6 +2017,8 @@ public:
   void Common_glNamedBufferStorageEXT(ResourceId id, GLsizeiptr size, const void *data,
                                       GLbitfield flags);
 
+  void Common_glEGLImageTargetTexture2DOES(ResourceId id, GLenum target, GLeglImageOES image);
+
   void MarkReferencedWhileCapturing(GLResourceRecord *record, FrameRefType refType);
 
   IMPLEMENT_FUNCTION_SERIALISED(GLenum, glCheckNamedFramebufferStatusEXT, GLuint framebuffer,
@@ -2561,6 +2563,11 @@ public:
   IMPLEMENT_FUNCTION_SERIALISED(void, glGetPerfQueryInfoINTEL, GLuint queryId,
                                 GLuint queryNameLength, GLchar *queryName, GLuint *dataSize,
                                 GLuint *noCounters, GLuint *noInstances, GLuint *capsMask);
+
+#if defined(RENDERDOC_SUPPORT_LETSGO)
+  // OES_EGL_image_external
+  IMPLEMENT_FUNCTION_SERIALISED(void, glEGLImageTargetTexture2DOES, GLenum target, GLeglImageOES image);
+#endif
 };
 
 class ScopedDebugContext

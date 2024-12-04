@@ -7380,6 +7380,80 @@ void WrappedOpenGL::glTextureFoveationParametersQCOM(GLuint texture, GLuint laye
   }
 }
 
+#if defined(RENDERDOC_SUPPORT_LETSGO)
+
+// GL_OES_EGL_image_external
+template <typename SerialiserType>
+bool WrappedOpenGL::Serialise_glEGLImageTargetTexture2DOES(SerialiserType& ser, GLenum target,
+    GLeglImageOES image)
+{
+    return true;
+}
+
+void WrappedOpenGL::Common_glEGLImageTargetTexture2DOES(ResourceId texId, GLenum target, GLeglImageOES image)
+{
+    if (texId == ResourceId())
+        return;
+
+    CoherentMapImplicitBarrier();
+
+    if (IsProxyTarget(target))
+        return;
+
+    /*
+    if (IsCaptureMode(m_State))
+    {
+        GLResourceRecord* record = GetResourceManager()->GetResourceRecord(texId);
+        RDCASSERT(record);
+
+        USE_SCRATCH_SERIALISER();
+        SCOPED_SERIALISE_CHUNK(gl_CurChunk);
+        Serialise_glEGLImageTargetTexture2DOES(ser, target, image);
+
+        Chunk* chunk = scope.Get();
+        record->AddChunk(chunk);
+
+        // if we're actively capturing this may be a creation but it may be a re-initialise. Insert
+        // the chunk here as well to ensure consistent replay
+        if (IsActiveCapturing(m_State))
+        {
+            GetContextRecord()->AddChunk(chunk->Duplicate());
+            GetResourceManager()->MarkResourceFrameReferenced(record->GetResourceID(),
+                eFrameRef_PartialWrite);
+        }
+
+        // illegal to re-type textures
+        record->VerifyDataType(target);
+
+        GetResourceManager()->MarkDirtyResource(record->GetResourceID());
+    }
+    */
+}
+
+void WrappedOpenGL::glEGLImageTargetTexture2DOES(GLenum target, GLeglImageOES image)
+{
+    MarkReferencedWhileCapturing(GetCtxData().GetActiveTexRecord(target), eFrameRef_PartialWrite);
+
+    SERIALISE_TIME_CALL(GL.glEGLImageTargetTexture2DOES(target, image));
+
+    // saves on queries of the currently bound texture to this target, as we don't have records on
+    // replay
+    if (IsReplayMode(m_State))
+    {
+        RDCERR("Internal textures should be allocated via dsa interfaces");
+    }
+    else if (!IsProxyTarget(target))
+    {
+        GLResourceRecord* record = GetCtxData().GetActiveTexRecord(target);
+        if (record != NULL)
+            Common_glEGLImageTargetTexture2DOES(record->GetResourceID(), target, image);
+        else
+            RDCERR("Calling non-DSA texture function with no texture bound to active slot");
+    }
+}
+
+#endif
+
 #pragma endregion
 
 INSTANTIATE_FUNCTION_SERIALISED(void, glGenTextures, GLsizei n, GLuint *textures);
@@ -7494,3 +7568,7 @@ INSTANTIATE_FUNCTION_SERIALISED(void, glInvalidateTexImage, GLuint texture, GLin
 INSTANTIATE_FUNCTION_SERIALISED(void, glInvalidateTexSubImage, GLuint texture, GLint level,
                                 GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width,
                                 GLsizei height, GLsizei depth);
+
+#if defined(RENDERDOC_SUPPORT_LETSGO)
+INSTANTIATE_FUNCTION_SERIALISED(void, glEGLImageTargetTexture2DOES, GLenum target, GLeglImageOES image);
+#endif

@@ -1013,6 +1013,7 @@
   FUNC(glFramebufferTextureMultiviewOVR, glFramebufferTextureMultiviewOVR); \
   FUNC(glFramebufferTextureMultisampleMultiviewOVR, glFramebufferTextureMultisampleMultiviewOVR); \
   FUNC(glTextureFoveationParametersQCOM, glTextureFoveationParametersQCOM); \
+  FUNC(glEGLImageTargetTexture2DOES, glEGLImageTargetTexture2DOES); \
   FUNC(glMaxShaderCompilerThreadsKHR, glMaxShaderCompilerThreadsKHR); \
   FUNC(glMaxShaderCompilerThreadsKHR, glMaxShaderCompilerThreadsARB); \
   FUNC(glSpecializeShader, glSpecializeShader); \
@@ -2277,6 +2278,7 @@
   FuncWrapper6(void, glFramebufferTextureMultiviewOVR, GLenum, target, GLenum, attachment, GLuint, texture, GLint, level, GLint, baseViewIndex, GLsizei, numViews); \
   FuncWrapper7(void, glFramebufferTextureMultisampleMultiviewOVR, GLenum, target, GLenum, attachment, GLuint, texture, GLint, level, GLsizei, samples, GLint, baseViewIndex, GLsizei, numViews); \
   FuncWrapper8(void, glTextureFoveationParametersQCOM, GLuint, texture, GLuint, layer, GLuint, focalPoint, GLfloat, focalX, GLfloat, focalY, GLfloat, gainX, GLfloat, gainY, GLfloat, foveaArea); \
+  FuncWrapper2(void, glEGLImageTargetTexture2DOES, GLenum, target, GLeglImageOES, image); \
   FuncWrapper1(void, glMaxShaderCompilerThreadsKHR, GLuint, count); \
   AliasWrapper1(void, glMaxShaderCompilerThreadsARB, glMaxShaderCompilerThreadsKHR, GLuint, count); \
   FuncWrapper5(void, glSpecializeShader, GLuint, shader, const GLchar *, pEntryPoint, GLuint, numSpecializationConstants, const GLuint *, pConstantIndex, const GLuint *, pConstantValue); \
@@ -2866,7 +2868,6 @@
   FUNC(glEdgeFlagv); \
   FUNC(glEGLImageTargetRenderbufferStorageOES); \
   FUNC(glEGLImageTargetTexStorageEXT); \
-  FUNC(glEGLImageTargetTexture2DOES); \
   FUNC(glEGLImageTargetTextureStorageEXT); \
   FUNC(glElementPointerAPPLE); \
   FUNC(glElementPointerATI); \
@@ -4775,7 +4776,6 @@
   UnsupportedWrapper1(void, glEdgeFlagv, const GLboolean *, flag); \
   UnsupportedWrapper2(void, glEGLImageTargetRenderbufferStorageOES, GLenum, target, GLeglImageOES, image); \
   UnsupportedWrapper3(void, glEGLImageTargetTexStorageEXT, GLenum, target, GLeglImageOES, image, const GLint*, attrib_list); \
-  UnsupportedWrapper2(void, glEGLImageTargetTexture2DOES, GLenum, target, GLeglImageOES, image); \
   UnsupportedWrapper3(void, glEGLImageTargetTextureStorageEXT, GLuint, texture, GLeglImageOES, image, const GLint*, attrib_list); \
   UnsupportedWrapper2(void, glElementPointerAPPLE, GLenum, type, const void *, pointer); \
   UnsupportedWrapper2(void, glElementPointerATI, GLenum, type, const void *, pointer); \

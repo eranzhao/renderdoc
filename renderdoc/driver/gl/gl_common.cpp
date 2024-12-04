@@ -1354,6 +1354,9 @@ size_t TextureIdx(GLenum buf)
     case eGL_TEXTURE_CUBE_MAP_NEGATIVE_Z: return 8;
     case eGL_TEXTURE_CUBE_MAP_ARRAY: return 9;
     case eGL_TEXTURE_BUFFER: return 10;
+#if defined(RENDERDOC_SUPPORT_LETSGO)
+    case eGL_TEXTURE_EXTERNAL_OES: return 11;
+#endif
     default: RDCERR("Unexpected enum as texture target: %s", ToStr(buf).c_str());
   }
 
@@ -1374,6 +1377,9 @@ GLenum TextureEnum(size_t idx)
       eGL_TEXTURE_CUBE_MAP,
       eGL_TEXTURE_CUBE_MAP_ARRAY,
       eGL_TEXTURE_BUFFER,
+#if defined(RENDERDOC_SUPPORT_LETSGO)
+      eGL_TEXTURE_EXTERNAL_OES,
+#endif
   };
 
   if(idx < ARRAY_COUNT(enums))

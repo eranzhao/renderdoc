@@ -4092,6 +4092,8 @@ bool WrappedOpenGL::ProcessChunk(ReadSerialiser &ser, GLChunk chunk)
     case GLChunk::glTextureFoveationParametersQCOM:
       return Serialise_glTextureFoveationParametersQCOM(ser, eGL_NONE, 0, 0, 0.0f, 0.0f, 0.0f, 0.0f,
                                                         0.0f);
+    case GLChunk::glEGLImageTargetTexture2DOES:
+        return Serialise_glEGLImageTargetTexture2DOES(ser, eGL_NONE, 0);
     case GLChunk::glFramebufferParameteri:
     case GLChunk::glNamedFramebufferParameteri:
     case GLChunk::glNamedFramebufferParameteriEXT:
