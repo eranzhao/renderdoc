@@ -245,12 +245,6 @@ template <typename SerialiserType>
 bool WrappedOpenGL::Serialise_glBindTexture(SerialiserType &ser, GLenum in_target, GLuint textureHandle)
 {
   GLenum target = in_target;
-#if defined(RENDERDOC_SUPPORT_LETSGO)
-  if (in_target == eGL_TEXTURE_EXTERNAL_OES)
-  {
-    target = eGL_TEXTURE_2D;
-  }
-#endif
   SERIALISE_ELEMENT(target);
   SERIALISE_ELEMENT_LOCAL(texture, TextureRes(GetCtx(), textureHandle));
 
