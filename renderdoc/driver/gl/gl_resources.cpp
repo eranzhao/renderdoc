@@ -1977,6 +1977,9 @@ GLenum TextureBinding(GLenum target)
     case eGL_TEXTURE_CUBE_MAP_NEGATIVE_Z: return eGL_TEXTURE_BINDING_CUBE_MAP;
     case eGL_TEXTURE_CUBE_MAP_ARRAY: return eGL_TEXTURE_BINDING_CUBE_MAP_ARRAY;
     case eGL_TEXTURE_BUFFER: return eGL_TEXTURE_BINDING_BUFFER;
+#if defined(RENDERDOC_SUPPORT_LETSGO)
+    case eGL_TEXTURE_EXTERNAL_OES: return eGL_TEXTURE_BINDING_2D;
+#endif
     default: break;
   }
 

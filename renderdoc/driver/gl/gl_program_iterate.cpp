@@ -384,6 +384,9 @@ void DoSerialise(SerialiserType &ser, ProgramUniformValue &el)
     case eGL_SAMPLER_BUFFER:
     case eGL_SAMPLER_2D_RECT:
     case eGL_SAMPLER_2D_RECT_SHADOW:
+#if defined(RENDERDOC_SUPPORT_LETSGO)
+    case eGL_SAMPLER_EXTERNAL_OES:
+#endif
     case eGL_INT_SAMPLER_1D:
     case eGL_INT_SAMPLER_2D:
     case eGL_INT_SAMPLER_3D:
@@ -779,6 +782,9 @@ static void ForAllProgramUniforms(SerialiserType *ser, CaptureState state,
           case eGL_SAMPLER_BUFFER:
           case eGL_SAMPLER_2D_RECT:
           case eGL_SAMPLER_2D_RECT_SHADOW:
+#if defined(RENDERDOC_SUPPORT_LETSGO)
+          case eGL_SAMPLER_EXTERNAL_OES:
+#endif
           case eGL_INT_SAMPLER_1D:
           case eGL_INT_SAMPLER_2D:
           case eGL_INT_SAMPLER_3D:
@@ -1096,6 +1102,9 @@ static void ForAllProgramUniforms(SerialiserType *ser, CaptureState state,
           case eGL_SAMPLER_BUFFER:
           case eGL_SAMPLER_2D_RECT:
           case eGL_SAMPLER_2D_RECT_SHADOW:
+#if defined(RENDERDOC_SUPPORT_LETSGO)
+          case eGL_SAMPLER_EXTERNAL_OES:
+#endif
           case eGL_INT_SAMPLER_1D:
           case eGL_INT_SAMPLER_2D:
           case eGL_INT_SAMPLER_3D:

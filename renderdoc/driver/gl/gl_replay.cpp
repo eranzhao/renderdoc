@@ -554,6 +554,9 @@ void GLReplay::CacheTexture(ResourceId id)
     case eGL_TEXTURE_2D_MULTISAMPLE_ARRAY: tex.type = TextureType::Texture2DMSArray; break;
     case eGL_TEXTURE_CUBE_MAP: tex.type = TextureType::TextureCube; break;
     case eGL_TEXTURE_CUBE_MAP_ARRAY: tex.type = TextureType::TextureCubeArray; break;
+#if defined(RENDERDOC_SUPPORT_LETSGO)
+    case eGL_TEXTURE_EXTERNAL_OES: tex.type = TextureType::Texture2D; break;
+#endif
 
     default:
       tex.type = TextureType::Unknown;
@@ -576,6 +579,9 @@ void GLReplay::CacheTexture(ResourceId id)
     case eGL_TEXTURE_RECTANGLE:
     case eGL_TEXTURE_2D_MULTISAMPLE:
     case eGL_TEXTURE_CUBE_MAP:
+#if defined(RENDERDOC_SUPPORT_LETSGO)
+    case eGL_TEXTURE_EXTERNAL_OES:
+#endif
       tex.dimension = 2;
       tex.width = (uint32_t)width;
       tex.height = (uint32_t)height;
