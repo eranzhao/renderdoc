@@ -7385,49 +7385,78 @@ void WrappedOpenGL::glTextureFoveationParametersQCOM(GLuint texture, GLuint laye
 // GL_OES_EGL_image_external
 template <typename SerialiserType>
 bool WrappedOpenGL::Serialise_glEGLImageTargetTexture2DOES(SerialiserType& ser, GLenum target,
-    GLeglImageOES image)
+                                                           GLeglImageOES image)
 {
+    // Do nothing.
     return true;
 }
 
-void WrappedOpenGL::Common_glEGLImageTargetTexture2DOES(ResourceId texId, GLenum target, GLeglImageOES image)
+void WrappedOpenGL::Common_glEGLImageTargetTexture2DOES(ResourceId texId, GLenum target,
+                                                        GLeglImageOES image)
 {
-    if (texId == ResourceId())
-        return;
+  if (texId == ResourceId())
+    return;
 
-    CoherentMapImplicitBarrier();
+  CoherentMapImplicitBarrier();
 
-    if (IsProxyTarget(target))
-        return;
+  if (IsProxyTarget(target))
+    return;
 
-    /*
-    if (IsCaptureMode(m_State))
+  // Workaround: Make a fake texture
+  GLint level = 0;
+  GLsizei width = 1;
+  GLsizei height = 1;
+  GLint border = 0;
+  GLenum format = eGL_RGBA;
+  GLint internalformat = eGL_RGBA8;
+  GLenum type = eGL_UNSIGNED_BYTE;
+
+  if (IsCaptureMode(m_State))
+  {
+    GLResourceRecord* record = GetResourceManager()->GetResourceRecord(texId);
+    RDCASSERT(record);
+
+    USE_SCRATCH_SERIALISER();
+    SCOPED_SERIALISE_CHUNK(gl_CurChunk);
+    // Use glTexImage2D instead
+    Serialise_glTextureImage2DEXT(ser, record->Resource.name, target, level, internalformat,
+                                    width, height, border, format, type, NULL);
+
+    Chunk* chunk = scope.Get();
+    record->AddChunk(chunk);
+
+    // if we're actively capturing this may be a creation but it may be a re-initialise. Insert
+    // the chunk here as well to ensure consistent replay
+    if (IsActiveCapturing(m_State))
     {
-        GLResourceRecord* record = GetResourceManager()->GetResourceRecord(texId);
-        RDCASSERT(record);
-
-        USE_SCRATCH_SERIALISER();
-        SCOPED_SERIALISE_CHUNK(gl_CurChunk);
-        Serialise_glEGLImageTargetTexture2DOES(ser, target, image);
-
-        Chunk* chunk = scope.Get();
-        record->AddChunk(chunk);
-
-        // if we're actively capturing this may be a creation but it may be a re-initialise. Insert
-        // the chunk here as well to ensure consistent replay
-        if (IsActiveCapturing(m_State))
-        {
-            GetContextRecord()->AddChunk(chunk->Duplicate());
-            GetResourceManager()->MarkResourceFrameReferenced(record->GetResourceID(),
-                eFrameRef_PartialWrite);
-        }
-
-        // illegal to re-type textures
-        record->VerifyDataType(target);
-
-        GetResourceManager()->MarkDirtyResource(record->GetResourceID());
+      GetContextRecord()->AddChunk(chunk->Duplicate());
+      GetResourceManager()->MarkResourceFrameReferenced(record->GetResourceID(),
+                                                        eFrameRef_PartialWrite);
     }
-    */
+
+    // illegal to re-type textures
+    record->VerifyDataType(target);
+
+    GetResourceManager()->MarkDirtyResource(record->GetResourceID());
+  }
+
+  m_Textures[texId].mipsValid |= 1 << level;
+
+  if(level == 0)
+  {
+    m_Textures[texId].width = width;
+    m_Textures[texId].height = height;
+    m_Textures[texId].depth = 1;
+    if(target != eGL_NONE)
+      m_Textures[texId].curType = TextureTarget(target);
+    else
+      m_Textures[texId].curType =
+          TextureTarget(GetResourceManager()->GetResourceRecord(texId)->datatype);
+    m_Textures[texId].dimension = 2;
+    m_Textures[texId].internalFormat = (GLenum)internalformat;
+    m_Textures[texId].initFormatHint = format;
+    m_Textures[texId].initTypeHint = type;
+  }
 }
 
 void WrappedOpenGL::glEGLImageTargetTexture2DOES(GLenum target, GLeglImageOES image)
