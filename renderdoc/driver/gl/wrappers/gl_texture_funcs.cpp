@@ -3813,7 +3813,7 @@ void WrappedOpenGL::StoreCompressedTexData(ResourceId texId, GLenum target, GLin
           // GetCompressedByteSize() will factor in the 'partial' blocks at image edges when the
           // image size is not an integer multiple of the block size, so we need to take into
           // account that in the loop
-          size_t roundedUpHeight = AlignUp((uint32_t)height, blockSize[1]);
+          size_t roundedUpHeight = (uint32_t)height < blockSize[1] ? (uint32_t)height : AlignUp((uint32_t)height, blockSize[1]);
           for(size_t y = 0; y < roundedUpHeight; y += blockSize[1])
           {
             memcpy(cdData.data() + dstOffset, srcPixels + srcOffset, srcRowSize);
